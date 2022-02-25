@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:notes_flutter/src/core/model/note_model.dart';
+import 'package:notes_flutter/src/screens/home/home_screen_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/model/note.dart';
@@ -24,26 +23,27 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     final NoteModel _noteModel = Provider.of<NoteModel>(context, listen: false);
-
-    Dio()
-        .get("http://personal-simple-notes.herokuapp.com/notes/",
-            options: Options(contentType: Headers.jsonContentType))
-        .then((value) {
-      final List<dynamic> data = value.data;
-      // print("this before${data}");
-      final List<Note> notes = data
-          .map((n) => Note(
-              id: n["id"],
-              body: n["body"]))
-          .toList();
-            debugPrint("\nthis after $notes}");
+    final HomeScreenController _controller = HomeScreenController();
+    
+    _controller.getNotesList().then((List<Note> notes) {
       setState(() {
-        _noteModel.addAllNotes(notes);
-        loading = false;        
+        _noteModel
+        ..clearAll()
+        ..addAllNotes(notes);
+        error = "";
+        loading = false;
       });
+      
     }).catchError((e) {
-      debugPrint(e);
-    });
+      setState(() {
+        debugPrint(e.toString());
+      });
+
+      setState(() {
+        error = e.toString();
+        loading = false;
+      });
+    });   
   }
 
   addNote() {
