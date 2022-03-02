@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -9,7 +8,7 @@ import 'package:notes_flutter/utils/note_card_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/model/note.dart';
-import '../create/create_screen.dart';
+import '../create_note/create_note_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -53,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void createNote() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const CreateScreen()));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const CreateNoteScreen()));
   }
 
   @override
@@ -62,48 +61,73 @@ class _MyHomePageState extends State<MyHomePage> {
     double _maxHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white70.withOpacity(0.44),
+      // APP BAR
       appBar: AppBar(
-        title: Text(widget.title),
-        // centerTitle: true,
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: Colors.deepOrangeAccent,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.power_settings_new_rounded,
+            color: Colors.deepOrangeAccent,
+          ),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.person_pin_circle_outlined,
+              color: Colors.deepOrangeAccent,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.pending_outlined,
+              color: Colors.deepOrangeAccent,
+            ),
+            onPressed: () {},
+          ),
+        ],
         elevation: 2,
       ),
       body: loading
           ? LinearProgressIndicator(color: secondaryColor)
           : Column(
               children: [
-                // Container(
-                //   color: Colors.black,
-                //   height: _maxHeight * 0.08,
-                //   child: Row(
-                //     children: [
-                //       // Padding(
-                //       //   padding: const EdgeInsets.only(left: 25),
-                //       //   child: Icon(
-                //       //     Icons.sync_alt_rounded,
-                //       //     color: deepOrange,
-                //       //   ),
-                //       // ),
-                //       Padding(
-                //         padding: const EdgeInsets.only(left: 25),
-                //         child: Text(
-                //           "Anotações",
-                //           style: TextStyle(
-                //               color: deepOrange,
-                //               fontSize: 20,
-                //               fontWeight: FontWeight.w700),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                // SEARCH BAR
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    // color: Colors.white70.withOpacity(0.44),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: const [
+                      // Icon(
+                      //   Icons.search,
+                      //   color: Colors.deepOrangeAccent,
+                      // ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Encontre uma anotação",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: Consumer<NoteModel>(
                     builder: (context, noteModel, child) {
                       final List<Note> _filteredNotes = noteModel.filteredMenu;
-
-                      // if (_filteredNotes.isEmpty) {
-                      //   return const Center(child: Text("No notes found"));
-                      // }
                       if (error.isNotEmpty) {
                         return Center(child: Text(error));
                       }
@@ -129,51 +153,76 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton( // ADD TEXT SAYING "ADD NOTE"
-          backgroundColor: Colors.deepOrange[500],
-          onPressed: createNote,
-          child: const Icon(
-            Icons.add,
-            color: mobileBackgroundColor,
-          )),
+      // FLOATING ACTION BUTTON
+      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: addAnotationButton(createNote),
+      // BOTTOM NAVIGATION BAR
+      bottomNavigationBar: BottomAppBar(
+        //bottom navigation bar on scaffold
+        // color: Colors.redAccent,
+        shape: const CircularNotchedRectangle(), //shape of notch
+        notchMargin:
+            5, //notche margin between floating button and bottom appbar
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.align_horizontal_left_sharp),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.notes_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
+Widget addAnotationButton(Function()? onPressed) =>
+    FloatingActionButton.extended(
+      backgroundColor: Colors.deepOrange[500],
+      onPressed: onPressed,
+      icon: const Icon(
+        Icons.plus_one,
+        size: 24,
+      ), 
+      label: const Text(
+        'Anotação',
+        style: TextStyle(
+          color: mobileBackgroundColor,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
 
-// Container(
-//                             padding: EdgeInsets.symmetric(
-//                               horizontal: _maxHeight * 0.03,
-//                             ),
-//                             child: ListTile(
-//                               subtitle: Text(
-//                                 " ${_filteredNotes[item].id.toString()} ª anotação",
-//                                 style: TextStyle(
-//                                     fontSize: _maxHeight * 0.024,
-//                                     backgroundColor: Colors.blueGrey[200],
-//                                     color: Colors.white),
-//                               ),
-//                               title: Text(
-//                                 _filteredNotes[item].body.toString(),
-//                                 style: TextStyle(
-//                                   fontSize: _maxHeight * 0.042,
-//                                   fontWeight: FontWeight.w400,
-//                                   color: Colors.white,
-//                                 ),
-//                               ),
-//                               trailing: Container(
-//                                 padding: EdgeInsets.symmetric(
-//                                   horizontal: _maxHeight * 0.02,
-//                                 ),
-//                                 margin: const EdgeInsets.all(8),
-//                                 color: secondaryColor,
-//                                 child: IconButton(
-//                                   icon: const Icon(Icons.delete),
-//                                   onPressed: () {},
-//                                   color: Colors.black.withOpacity(0.8),
-//                                 ),
-//                               ),
-//                               onTap: () {},
-//                             ),
-//                           );
+Widget customBottomBar() => BottomNavigationBar(
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
+      // backgroundColor: Colors.black,
+      items: [
+        BottomNavigationBarItem(
+          icon: const Icon(
+            Icons.align_horizontal_left_sharp,
+            color: Colors.white,
+          ),
+          label: "Anotações",
+          backgroundColor: Colors.deepOrange[500],
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.notes_outlined),
+          label: "Outras categorias",
+        ),
+      ],
+      onTap: (int index) {},
+    );
