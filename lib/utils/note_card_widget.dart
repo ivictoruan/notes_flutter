@@ -11,7 +11,7 @@ class NoteCardWidget extends StatelessWidget {
     double _maxHeight = MediaQuery.of(context).size.height;
     return Card(
       clipBehavior: Clip.antiAlias,
-      elevation: 2,
+      elevation: 20,
       child: Column(
         children: [
           ListTile(
@@ -20,10 +20,17 @@ class NoteCardWidget extends StatelessWidget {
               onPressed: () {},
               color: Colors.deepOrange[500],
             ),
-            // title: const Text('Nota 1'),
             title: Text(
               '${id.toString()} ª anotação',
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.deepOrangeAccent,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+              ),
+            ),
+            trailing: const Text(
+              "02/03/2022",
+              style: TextStyle(color: Color.fromARGB(129, 255, 255, 255)),
             ),
           ),
           Padding(
@@ -34,6 +41,8 @@ class NoteCardWidget extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
+                letterSpacing: 0.2,
+                fontFamily: "Lato",
               ),
             ),
           ),
@@ -41,14 +50,12 @@ class NoteCardWidget extends StatelessWidget {
             alignment: MainAxisAlignment.start,
             children: [
               TextButton(
-                onPressed: () {
-                  // Perform some action
-                },
+                onPressed: () {},
                 child: Row(
                   children: const [
                     Icon(
                       Icons.share_outlined,
-                      color: Colors.white,
+                      color: Colors.greenAccent,
                     ),
                     Text(
                       '  Compartilhar no Whatsapp',
@@ -68,13 +75,13 @@ class NoteCardWidget extends StatelessWidget {
                     Text(
                       'Apagar  ',
                       style: TextStyle(
-                        color: Colors.yellowAccent,
+                        color: Colors.deepOrangeAccent,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Icon(
                       Icons.delete_outline,
-                      color: Colors.white,
+                      color: Colors.deepOrangeAccent,
                     ),
                   ],
                 ),
