@@ -7,12 +7,10 @@ class NotesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Notes',
+      title: 'Anotações Pessoais',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Notes'),
+      theme: ThemeData.dark(),
+      home: const MyHomePage(title: 'Anotações Pessoais'),
     );
   }
 }
